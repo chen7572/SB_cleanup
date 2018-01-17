@@ -345,17 +345,13 @@ print(c(accuracy= acc, cutoff = cutoff))
 
 &nbsp;
 
-We can also show how f-score changes as a function of cutoff, and the f score for this model. 
+We can also show how f-score changes as a function of cutoff. 
 ```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 5, fig.align = "center"}
 
 # Plot F1 score 
 pred_f <- performance(pred,"f")
 plot(pred_f)
 
-cutoff = 0.500
-ind = which(slot(pred_f, "x.values")[[1]] == cutoff )
-f_measure = slot(pred_f, "y.values")[[1]][ind]
-print(c(f_measure=f_measure , cutoff = cutoff))
 
 ```
 
