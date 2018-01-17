@@ -1,0 +1,13 @@
+Explanations of the files here:
+
+results.tsv: earthquake data with fatality and damages downloaded from significant earthquake database.
+world_gdp_Data.csv: GDP data downloaded from World Bank.
+world_gdp_Definition and Source.csv: describes the column definitions and the data source. 
+world_population_Data.csv: population data downloaded from the World Bank.
+world_population_Definition and Source.csv: describes the column definitions and data source. 
+Data_Wrangling.R : script that I used to process the data and make plots.
+Capstone_Report.Rmd: Markdown file for the report
+Capstone_Report.pdf: the report.
+Capstone_Slides.Rmd: Markdown file for the slides.
+Capstone_Slides.html: output as an html file.
+Captsone_Slides.pdf: output as a pdf file. 
