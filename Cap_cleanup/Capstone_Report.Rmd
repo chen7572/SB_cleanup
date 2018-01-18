@@ -19,21 +19,21 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Earthquakes, one of the most damaging natural disasters, take away hundreds to thousands of lives and houses worldwide each year. While it is difficult to predict when the next earthquake will hit, the earthquake prone areas can take actions to be more prepared if such disasters happen. Through this project, I want to analyze earthquakes for the past 50 years to investigate (1) the factors that contributed to high fatalities/damages in large earthquakes and (2) the correlation between large earthquake fatality/damages and a country's economic situation. The questions that I attempt to answer through this project are: 
 
-1) overall, are we doing better at reducing damages and fatality over the past 50 years; 
+1) overall, are we doing better at reducing damages and fatality over the past 50 years? 
 
 2) are the total deaths/damages correlated with the magnitude/depth/location of the earthquakes?
 
-3) is there a correlation between a country's GDP/population and the total deaths/damages; 
+3) is there a correlation between a country's GDP/population and the total deaths/damages? 
 
 ##*\textcolor{blue}{Explanation of the Dataset}*
 
-The dataset used in this study is downloaded from NOAA [significant earthquake database](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1), which contains damaging earthquakes from 2150 B.C. to the present. Earthquakes between 1967 and 2017 were downloaded for this analysis. This dataset contains important information of the earthquake data, location, depth, magnitude, total deaths, and total damages. A country's economic status for the past 57 years, represented by [GDP](http://databank.worldbank.org/data/reports.aspx?source=2&series=NY.GDP.MKTP.CD&country=#) and [population](http://databank.worldbank.org/data/reports.aspx?source=2&series=SP.POP.TOTL&country=) were downloaded from the World Bank database.   
+The dataset used in this study is downloaded from NOAA [significant earthquake database](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1), which contains damaging earthquakes from 2150 B.C. to the present. Earthquakes between 1967 and 2017 were downloaded for this analysis. This dataset contains important information of the earthquake date, location, depth, magnitude, total deaths, and total damages. A country's economic status for the past 57 years, represented by [GDP](http://databank.worldbank.org/data/reports.aspx?source=2&series=NY.GDP.MKTP.CD&country=#) and [population](http://databank.worldbank.org/data/reports.aspx?source=2&series=SP.POP.TOTL&country=) were downloaded from the World Bank database.   
 
 The difficulty of analyzing the dataset is how to handle the missing values. For instance, 1222 out of 2012 earthquakes do not have the total deaths count, and 1691 out of 2012 earthquakes do not list the total damage values. It is unclear if the empty field represents unavailable data or there were no damage or deaths in these earthquakes. However, considering that the downloaded earthquake data were from the past 50 years when global earthquake recording networks were in place and documentations of these earthquakes were relatively complete, it is very likely that these missing fields represent no deaths or damages.   
 
-One limitation of this dataset is the absence the local population density information at each earthquake location. While a country's population is an indication of how dense the population is, the distribution of population varies from area to area. In addition, large countries will have great values of population, but the earthquakes may occur along faults that are far away from the residential areas. Another limitation is the lack of information on building code/style at each earthquake location. One would imagine that areas with stronger buildings will have fewer deaths/damages. After all, earthquakes don't kill people, but buildings do. Because of the lack of information on the local population density and building code, we cannot quantify the correlation between these factors and the total deaths/damages. 
+One limitation of this dataset is the absence the local population density information at each earthquake location. While a country's population is an indication of how dense the population is, the distribution of population varies from area to area. In addition, large countries will have great values of population, but the earthquakes may occur along faults that are far away from the the densely populated areas. Another limitation is the lack of information on building code/style at each earthquake location. One would imagine that areas with stronger buildings will have fewer deaths/damages. After all, earthquakes don't kill people, but buildings do. Because of the lack of information on the local population density and building code, we cannot quantify the correlation between these factors and the total deaths/damages. 
 
-To clean up the data, I converted the date and time of the earthquakes from characters to date in R. Using the "dplyr" and "tidyr" packages, I re-arranged the earthquake data by countries and earthquake variables that were used in the analysis. I also collapsed the GDP and population data into Year-Value pairs, in order to john the population/GDP data with with the earthquake data. There are ".." values in the GDP and population data, which were replaced with NA values. 
+To clean up the data, I converted the date and time of the earthquakes from characters to date in R. Using the "dplyr" and "tidyr" packages, I re-arranged the earthquake data by countries and earthquake variables that were used in this analysis. I also collapsed the GDP and population data into Year-Value pairs, in order to john the population/GDP data with with the earthquake data. There are ".." values in the GDP and population data, which were replaced with NA values. 
 
 ##*\textcolor{blue}{Results}*
 
@@ -140,7 +140,7 @@ ggplot(df1, aes(x = format(DATE,"%Y"), y = VALUE, fill = LOSS)) +
 
 
 \newpage
-First, I plotted the total deaths and total damages VS earthquake magnitude. A few data points with very high fatality and damages skewed the plots and make the rest of the data points very clustered. So I applied log1p() to the total deaths and total damages before plotting, because log scales allow a large range to be displayed without small values being compressed down into bottom of the graph. 
+First, I plotted the total deaths and total damages VS earthquake magnitude. A few data points with very high fatality and damages skewed the plots and made the rest of the data points very clustered. So I applied log1p() to the total deaths and total damages before plotting, because log scale allows a large range to be displayed without small values being compressed down into bottom of the graph. 
 
 ```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 2.5}
 test1 <- ggplot(country_eq,aes(x=EQ_PRIMARY, y = TOTAL_DEATHS)) +
@@ -177,7 +177,7 @@ grid.arrange(f1, f2, ncol = 2)
 ```
 
 \newpage
-There is a weak correlation between focal depth and total deaths. More deaths are correlated with shallower earthquakes. There is usually no death in very deep earthquakes (> 300 km), except for one earthquake in Peru that occurred in 1970 had 1 death on record, and the 1994 M8.2 earthquake in Bolivia that killed 5 people. No clear linear correlation is observed between focal depth and total damages. But it is interesting to see that most damages are related to earthquakes that are shallower than 100 km depths.  
+There is a weak correlation between focal depth and total deaths. More deaths are correlated with shallower earthquakes. There is usually no death in very deep earthquakes (> 300 km), except for one earthquake in Peru that occurred in 1970 with 1 death on record, and the 1994 M8.2 earthquake in Bolivia that killed 5 people. No clear linear correlation is observed between focal depth and total damages. But it is interesting to see that most damages are related to earthquakes that are shallower than 100 km depths.  
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height = 2.5}
 plot1 <- ggplot(country_eq,aes(x=FOCAL_DEPTH, y = log1p(TOTAL_DEATHS),color = EQ_PRIMARY)) +
@@ -259,7 +259,7 @@ grid_arrange_shared_legend(a1, a3, a2, a4)
 \newpage
 
 ###Machine Learning Methods Applied to the Data
-For this exercise, I applied two types of machine learning algorithms and both are supervised algorithm. I first ran linear regression analysis on my dataset, because I wanted to explore if the predictor (total deaths/damages) is a function of the earthquake variables (such as depth, magnitude, location(lat,lon), and intensity). But the high residual and low R-squared value in the summary of this model suggest a bad fit. 
+For this exercise, I applied two types of machine learning algorithms and both are supervised algorithm. I first ran linear regression analysis on my dataset, because I wanted to explore if the variable that I want to predict (total deaths/damages) varies as a function of the earthquake variables (such as depth, magnitude, location(lat,lon), and intensity). But the high residual and low R-squared value in the summary of this model suggest a bad fit. 
 
 ```{r, message = FALSE,warning = FALSE, echo = FALSE}
 # Regression Analysis
@@ -274,7 +274,7 @@ summary(model1)
 
 &nbsp;
 
-I also included the economic status of a country represented by the GDP and the population in the regression analysis. Inspecting the summary of this model suggests a slight increase in performance of this model, but it still was not a good fit model. 
+I also included the economic status of a country represented by the GDP and population in the regression analysis. Inspecting the summary of this model suggests a slight increase in the performance, but it still was not a good fit model. 
 
 ```{r, message = FALSE,warning = FALSE, echo = FALSE}
 model2 <- lm(TOTAL_DEATHS ~ FOCAL_DEPTH + EQ_PRIMARY + INTENSITY + LATITUDE + LONGITUDE
@@ -301,7 +301,7 @@ fit
 
 &nbsp;
 
-My mentor suggested that I could treat the problem as a classification problem, whether deaths occurred or not. So I divided the data frame into two groups, one with deaths and one without fatality, and saved a new variable. Then I used this newly created variable and ran the random forest algorithm on my data again. The out-of-bag error is 32.85%. We can take a look at how well our model is by plotting the AUC (Area Under the Curve). Here we see that AUC = 0.72, which means there is 72% chance that our model will rank a randomly chosen postive example (deaths exist) higher than a randomly chosen negative example (no deaths).    
+My mentor suggested that I could treat the problem as a classification problem, whether deaths occurred or not. So I divided the data set into two groups, one with deaths and one without fatality, and saved this as a new variable. Then I used this newly created variable and ran the random forest algorithm again. The out-of-bag error is 32.85%. We can take a look at how well our model is by plotting the ROC (Receiver Operating Characteristic) curve. Here we see that the area under curve (AUC) is 0.72, which means that there is 72% chance that our model will rank a randomly chosen postive example (deaths exist) higher than a randomly chosen negative example (no deaths).    
 
 ```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 5, fig.align = "center"}
 
@@ -328,11 +328,10 @@ perf_ROC <- performance(pred,"tpr","fpr")
 text(0.5,0.5,paste("AUC = ",format(AUC, digits=5, scientific=FALSE)))}
 ```
 
-&nbsp;
+\newpage
+I plotted the accuracy plot to show how the accuracy changes as a function of cutoff value. And we can see when the cut off value is ~ 0.5, we achieve the highest accuracy.  
 
-I also plotted the accuracy plot to show how the accuracy changes as a function of cutoff value. And we can see when the cut off value is ~ 0.5, we achieve the highest accuracy.  
-
-```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 5, fig.align = "center"}
+```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 4, fig.width = 5, fig.align = "center"}
 # Plot accuracy 
 pred_acc <- performance(pred,"acc")
 plot(pred_acc)
@@ -345,8 +344,8 @@ print(c(accuracy= acc, cutoff = cutoff))
 
 &nbsp;
 
-We can also show how f-score changes as a function of cutoff. 
-```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 5, fig.align = "center"}
+Similarly, we can show how the f-score changes as a function of cutoff. 
+```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 4, fig.width = 5, fig.align = "center"}
 
 # Plot F1 score 
 pred_f <- performance(pred,"f")
@@ -357,14 +356,16 @@ plot(pred_f)
 
 &nbsp;
 
-Using this classification model, we can try to make predictions on the fatality at a specific location, given the earthquake magnitude, depth, the population and GDP. For instance, if a magnitude 7 earthquake at a depth of 32.97 km hits a country with 256 million people and 917 billion US dollar GDP, the prediction on whether there will be fatalities is shown below. The results look rather blocky, but similar modeling with a more representative local population and gdp can be applied to a small region, such as a country or a state. 
+Using this classification model, we can try to make predictions on the fatality at a specific location, given the earthquake magnitude, depth, the population and GDP. For instance, if a magnitude 7 earthquake at a depth of 32.97 km hits a country with 256 million people and 917 billion US dollar GDP, the prediction on whether there will be fatalities is shown below. The plot looks rather blocky, likely because of the interpolation of data at areas without data points. In addition, as we noted earlier, we have kept the earthquake magnitude, depth, country's population and GDP as constants, and we are only showing how the fatality changes as a function of location. If we take the same modeling strategy and apply it to a small region with local earthquake, population and GDP data, we will achieve more detailed predictions. 
 
-```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 4, fig.align = "center"}
-# Predictions if deaths exist, based on Latitude and Longitude. 
+```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 3, fig.align = "center"}
+# Predictions if deaths exist, based on Latitude and Longitude. Add in a map showing the probability of earthquake. in addition to showing the class. 
 newdata <- df_NA_removed %>% with(expand.grid(LATITUDE=seq(min(LATITUDE), max(LATITUDE), by = 2),
                                            LONGITUDE=seq(min(LONGITUDE), max(LONGITUDE), by = 2), Population=mean(Population), 
                                            EQ_PRIMARY = 7, GDP_currentUSD=mean(GDP_currentUSD), FOCAL_DEPTH=mean(FOCAL_DEPTH)))
-newdata$Predicted_Deaths <- predict(fit2, newdata=newdata)  
+newdata$Predicted_Deaths <- predict(fit2, newdata=newdata) 
+
+newdata$Predicted_Prob <- predict(fit2, newdata = newdata, type = "prob")[,2]
 
 map.world <- map_data(map = "world")
 my_map <- ggplot(map.world, aes(x = long, y = lat, group = group))
@@ -375,6 +376,19 @@ my_map + geom_point(aes(x = LONGITUDE, y = LATITUDE, color = Predicted_Deaths),
 ```
 
 &nbsp;
+
+Figure above shows if deaths will occur or not. We can also show the probability of whether there will be fatality. In the figure below, the darker blue area represents greater chance of deaths, and the darker red marks minimal probability of deaths. The pattern looks similar to the figure agove, but it gives information on how likely deaths will occur based on my model. 
+
+```{r, message = FALSE,warning = FALSE, echo = FALSE, fig.height = 3, fig.align = "center"}
+newdata$Predicted_Prob <- predict(fit2, newdata = newdata, type = "prob")[,2]
+
+my_map + geom_point(aes(x = LONGITUDE, y = LATITUDE, color = Predicted_Prob),
+                    data = newdata, size = 1, alpha = 0.4, inherit.aes = FALSE) +
+          scale_color_gradient2(low = "red", mid = "white",
+                                 high = "blue",midpoint = 0.5)
+
+```
+
 
 ###Map the Earthquakes 
 While it is useful to explore the correlation between total loss in large earthquakes and the earthquake characteristics, the public would be more interested in learning about where are these earthquakes and how the total loss changes at each location over the years. Using the "ggmap" package in R, we can explore the spatial and temporal change of total loss in large earthquakes. As shown in the following two figures, earthquakes are concentrated along certain areas, which mark the plate boundaries where tectonic plates interact with each other. The data was plotted every 10 years, and by tracking the color of the circles, we can see that for certain regions such as in the Mediterranean and the west coast of South America, the total loss has decreased over the years.  
@@ -469,8 +483,10 @@ grid.arrange(d1, d2, d3, d4, d5, ncol = 2, heights=unit(c(2.5,2.5,2.5), c("in", 
 ```
 
 ##*\textcolor{blue}{Summary}*
-By analyzing the significant earthquake data for the past 50 years, I am able to answer a few questions that I had. First, the overall total loss in large earthquakes did not decrease over the years, but the loss seemed to decrease at certain regions, such as the Mediterranean and part of South America. Second, there is a correlation between the total loss and earthquake characteristics. Specifically, large earthquakes and shallow earthquakes are correlated with more damages and deaths. These correlation, however, are not linear, as evidenced by the poor results from the linear regression analysis. 
+By analyzing the significant earthquake data for the past 50 years, I am able to answer a few questions that I had at the beginning. First, overall, the total loss in large earthquakes did not decrease over the years, but the loss seemed to decrease at certain regions, such as the Mediterranean and part of South America. Second, there is a correlation between the total loss and earthquake characteristics. Specifically, large earthquakes and shallow earthquakes are correlated with more damages and deaths. These correlation, however, are not linear, as evidenced by the poor results from the linear regression analysis. 
 
-A country's population and GDP are also likely correlated with loss in earthquakes, which were explored in this exercise too. While the linear regression analysis and the random forest regression method did not reveal interpretable correlation between the population/GDP and the loss in earthquakes, visualization of the data seems to reveal that rich countries (countries with higher GDP) are subject to less loss in earthquakes. This correlation requires further investigation because the distribution of earthquakes and GDP are not uniform across a country. Plotting the total loss in an earthquake which only affect a small region over an entire country's GDP may have over simplied the problem. A clearer correlation may emerge if we consider regional GDP, instead of the national GDP. 
+A country's population and GDP are also likely correlated with loss in earthquakes, which were explored in this exercise too. While the linear regression analysis did not reveal interpretable correlation between the population/GDP and the loss in earthquakes. Treating the total deaths as a classification problem, we can explore the deaths as a function of earthquake variables and a country's GDP and population. The model could fit 68% of our data, which is not great but can provide some information on if deaths will occur in an earthquake at a location. Using this model to predict the fatality at a location, given earthquake parameters and GDP/population, maps out where there might be deaths at earthquakes. Due to the lack of information on fault distribution and variation of population/GDP for each area, interpretation of the prediction results calls for caution though. 
 
-Results from this project will be useful for the UN to budget emergency fund for earthquake-prone areas, especially when combined with earthquake risk analysis results. For areas that are suffering great loss over the past 50 years and still have high risk for earthquakes, a greater amount of emergency fund should be budgeted. The analyses performed in this project can be furthered to study similar correlations in individual country, state or even city. And the results can be used to identify countries, states and cities that have succeeded in reducing the total loss over the years. Strategies deployed by these governments can be borrowed by places where earthquakes related damages/deaths are still very high. 
+Visualization of the data seems to reveal that rich countries (countries with higher GDP) are subject to less loss in earthquakes. This correlation requires further investigation too because the distribution of earthquakes and GDP are not uniform across a country. Plotting the total loss in an earthquake which only affect a small region over an entire country's GDP may have over simplied the problem. A clearer correlation may emerge if we consider regional GDP, instead of the national GDP. 
+
+Results from this project will be useful for the UN to budget emergency fund for earthquake-prone areas, especially when combined with earthquake risk analysis results. For areas that are suffering great loss over the past 50 years and still have high risk of earthquakes, a greater amount of emergency fund should be budgeted. The analyses performed in this project can be furthered to study similar correlations in individual country, state or even city. And the results can be used to identify countries, states and cities that have succeeded in reducing the total loss over the years. Strategies deployed by these governments can be borrowed by places where earthquakes related damages/deaths are still very high. 

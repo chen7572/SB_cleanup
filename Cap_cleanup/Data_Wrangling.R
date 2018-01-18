@@ -380,12 +380,22 @@ newdata <- df_NA_removed %>% with(expand.grid(LATITUDE=seq(min(LATITUDE), max(LA
                                               LONGITUDE=seq(min(LONGITUDE), max(LONGITUDE), by = 2), Population=mean(Population), 
                                               EQ_PRIMARY = 7, GDP_currentUSD=mean(GDP_currentUSD), FOCAL_DEPTH=mean(FOCAL_DEPTH)))
 newdata$Predicted_Deaths <- predict(fit2, newdata=newdata)  
-
+newdata$Predicted_Prob <- predict(fit2, newdata = newdata, type = "prob")[,2]
+newdata$Predicted_log_odds <- qlogis(newdata$Predicted_Prob)
+  
 map.world <- map_data(map = "world")
 my_map <- ggplot(map.world, aes(x = long, y = lat, group = group))
 my_map <- my_map + geom_path(size = 0.2)
 
 my_map + geom_point(aes(x = LONGITUDE, y = LATITUDE, color = Predicted_Deaths),
                     data = newdata, size = 1, alpha = 0.2, inherit.aes = FALSE) 
+
+my_map + geom_point(aes(x = LONGITUDE, y = LATITUDE, color = Predicted_Prob),
+                    data = newdata, size = 1, alpha = 0.4, inherit.aes = FALSE) +
+  scale_color_gradient2(low = "red", mid = "white",
+                        high = "blue")
+                       
+
+
 
 
