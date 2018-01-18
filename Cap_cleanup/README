@@ -1,4 +1,6 @@
-Explanations of the files here:
+Here are data files, script, and markdown files I used to generate the project on Exploratory Data Analysis on Earthquake Impact. 
+
+Explanations of the files are listed below:
 
 results.tsv: earthquake data with fatality and damages downloaded from significant earthquake database.
 world_gdp_Data.csv: GDP data downloaded from World Bank.
